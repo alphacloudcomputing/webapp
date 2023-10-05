@@ -6,7 +6,6 @@ const csv = require("fast-csv");
 
 const path = process.env.DEFAULTUSERPATH;
 
-//Populating the database
 const popData = async () => {
   await server.conn();
   try {
