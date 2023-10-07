@@ -24,6 +24,7 @@ jobs:
       - name: Set .env file
         run: |
           touch .env
+          echo DATABASE_PASSWORD = manav1201 >> .env
           echo DATABASE_NAME = cloud_01 >> .env
           echo DATABASE_USER = root >> .env
           echo PORT = 3306 >> .env
