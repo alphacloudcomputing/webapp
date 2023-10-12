@@ -5,13 +5,13 @@ const bcrypt = require("bcrypt");
 const verifyUser = async (req, res, next) => {
   const token = req.headers["authorization"];
   if (!token) {
-    return res.status(403).send("Please provide login credentials.");
+    return res.status(401).send("Please provide login credentials.");
   }
 
   const tokenParts = token.split(" ");
 
   if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== "basic") {
-    return res.status(403).send("Invalid login credentials");
+    return res.status(401).send("Invalid login credentials");
   }
 
   const tokenData = Buffer.from(tokenParts[1], "base64").toString();

@@ -59,7 +59,7 @@ const getAssignmentById = async (req, res) => {
     try {
       const assignments = await Assignment.findByPk(id);
       if (assignments == null) {
-        res.send("Assignment not found");
+        res.sendStatus(404);
       } else {
         res.status(200).send(assignments);
       }
@@ -74,13 +74,13 @@ const updateAssignment = async (req, res) => {
   const { id } = req.params;
   const { name, points, num_of_attemps, deadline } = req.body;
   if (!req.User.id) {
-    res.sendStatus(403);
+    res.sendStatus(401);
   } else {
     // console.log(req.User.id);
     try {
       const assignment = await Assignment.findByPk(id);
       if (assignment == null) {
-        res.status(204).send("Assignment not found");
+        res.status(404).send("Assignment not found");
       } else {
         // console.log(assignment.userId);
         if (req.User.id == assignment.userId) {
@@ -91,16 +91,14 @@ const updateAssignment = async (req, res) => {
           await assignment.save();
           res.sendStatus(204);
         } else {
-          res.sendStatus(401);
+          res.sendStatus(403);
         }
       }
     } catch (e) {
       if (e instanceof ValidationError) {
         res
-          .status(403)
-          .send(
-            "Invalid Values of points and num_of_attemps between 0 and 100"
-          );
+          .status(400)
+          .send();
       } else {
         console.log(e);
         res.sendStatus(400);
@@ -119,14 +117,14 @@ const deleteAssignment = async (req, res) => {
       try {
         const assignment = await Assignment.findByPk(id);
         if (assignment == null) {
-          res.send("Assignment not found");
+          res.sendStatus(404);
         } else {
           console.log(assignment.userId);
           if (req.User.id == assignment.userId) {
             await assignment.destroy();
             res.status(200).send("Assignment Deleted successfully.");
           } else {
-            res.sendStatus(401);
+            res.sendStatus(403);
           }
         }
       } catch (e) {
