@@ -4,12 +4,19 @@ require("../server.js");
 
 const Assignment = require("../models/assignments.js").assignment;
 
+const isValidNumber = (value) => {
+  return Number.isInteger(Number(value));
+};
+
 const createAssignment = async (req, res) => {
   const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
   const { name, points, num_of_attemps, deadline } = req.body;
   if (bodyLength == 0) {
     res.sendStatus(400);
   } else {
+    if (!isValidNumber(points) || !isValidNumber(num_of_attempts)) {
+      return res.sendStatus(400);
+    }
     // console.log(req.User.id);
     try {
       const assignment = await Assignment.create({
@@ -41,7 +48,9 @@ const getAllAssignments = async (req, res) => {
     res.sendStatus(400);
   } else {
     try {
-      const assignments = await Assignment.findAll();
+      const assignments = await Assignment.findAll({
+        attributes: { exclude: ["userId"] },
+      });
       res.status(200).send(assignments);
     } catch (e) {
       console.log(e);
@@ -57,7 +66,9 @@ const getAssignmentById = async (req, res) => {
     res.sendStatus(400);
   } else {
     try {
-      const assignments = await Assignment.findByPk(id);
+      const assignments = await Assignment.findByPk(id, {
+        attributes: { exclude: ["userId"] },
+      });
       if (assignments == null) {
         res.sendStatus(404);
       } else {
@@ -78,6 +89,9 @@ const updateAssignment = async (req, res) => {
   } else {
     // console.log(req.User.id);
     try {
+      if (!isValidNumber(points) || !isValidNumber(num_of_attempts)) {
+        return res.sendStatus(400);
+      }
       const assignment = await Assignment.findByPk(id);
       if (assignment == null) {
         res.status(404).send("Assignment not found");
@@ -96,9 +110,7 @@ const updateAssignment = async (req, res) => {
       }
     } catch (e) {
       if (e instanceof ValidationError) {
-        res
-          .status(400)
-          .send();
+        res.status(400).send();
       } else {
         console.log(e);
         res.sendStatus(400);
@@ -128,8 +140,8 @@ const deleteAssignment = async (req, res) => {
           }
         }
       } catch (e) {
-        if(!req.User.id){
-          res.sendStatus(401)
+        if (!req.User.id) {
+          res.sendStatus(401);
         }
         console.log(e);
         res.sendStatus(403);
