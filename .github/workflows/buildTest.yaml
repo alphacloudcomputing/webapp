@@ -1,4 +1,4 @@
-name: CI/CD Pipeline On PR
+name: CI Pipeline on Validation 
 
 on:
     pull_request:
