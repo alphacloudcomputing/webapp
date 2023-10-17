@@ -36,7 +36,7 @@ source "amazon-ebs" "cloud-app-ami" {
     "856405792108",
   ]
   
-  profile = "dev"
+  // profile = "dev"
   instance_type   = "t2.micro"
   source_ami      = "${var.source_ami}"
   ssh_username    = "${var.ssh_username}"
