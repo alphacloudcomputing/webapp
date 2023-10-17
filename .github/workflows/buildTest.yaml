@@ -19,7 +19,6 @@ jobs:
           node-version: '18.x'
           
       - name: Build application artifact
-        if: success()
         run: zip -r webapp.zip .
         
       - name: Configure AWS credentials
