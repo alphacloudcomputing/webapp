@@ -36,6 +36,7 @@ source "amazon-ebs" "cloud-app-ami" {
     "856405792108",
   ]
   
+  profile = "dev"
   instance_type   = "t2.micro"
   source_ami      = "${var.source_ami}"
   ssh_username    = "${var.ssh_username}"
@@ -48,7 +49,7 @@ source "amazon-ebs" "cloud-app-ami" {
 
   launch_block_device_mappings{
     delete_on_termination = true
-    device_name           = "/dev/sda1"
+    device_name           = "/dev/xvda"
     volume_size           = 8
     volume_type           = "gp2"
   }
