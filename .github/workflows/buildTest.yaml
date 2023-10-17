@@ -32,9 +32,9 @@ jobs:
       - name: Initialize packer configuration
         run: |
             cd packer
-            packer init webapp.pkr.hcl
+            packer init appconfig.pkr.hcl
         
       - name: Build AMI with Packer
         run: |
             cd packer 
-            packer build webapp.pkr.hcl
+            packer build appconfig.pkr.hcl
