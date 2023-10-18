@@ -24,6 +24,7 @@ jobs:
           ref: ${{ github.ref }}
           check-name: 'Checking Integration Test'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          running-workflow-name: ./.github/workflows/healthCheck.yaml
           wait-interval: 10
           allowed-conclusions: success
 
