@@ -65,7 +65,7 @@ jobs:
           PKR_VAR_DATABASE_NAME: '${{secrets.DATABASE_NAME}}'
           PKR_VAR_DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }} 
           PKR_VAR_DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          PKR_VAR_HOSTNAME: ${{secrets.HOSTNAME}} 
+          PKR_VAR_HOSTNAME: ${{ secrets.HOSTNAME }} 
           PKR_VAR_aws-region: "${{ secrets.AWS_REGION }}"
           PKR_VAR_source-ami: "${{ secrets.SOURCE_AMI }}"
           PKR_VAR_subnet-id: "${{ secrets.SUBNET_ID }}"
