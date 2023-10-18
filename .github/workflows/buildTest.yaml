@@ -1,9 +1,9 @@
 name: CI Pipeline on Validation 
 
 on:
-    push:
-        branches:
-          - main
+  push:
+    branches:
+      - main
 
 jobs:
   test-and-package:
@@ -12,6 +12,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up MariaDB
+        run: |
+          sudo apt-get update
+          sudo apt-get install mariadb-server -y
+          sudo systemctl start mariadb
+          sudo mysql -e "ALTER USER '${{ secrets.DATABASE_USER }}'@'localhost' IDENTIFIED BY '${{ secrets.DATABASE_PASSWORD }}'; flush privileges;"
         
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -35,6 +42,12 @@ jobs:
           
       - name: Build application artifact
         run: zip -r webapp.zip .
+
+      - name: Run Integration Test
+        run: |
+            ls -A
+            npm i -force
+            npm test
         
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
