@@ -1,8 +1,5 @@
 #! /bin/bash
 
-# moving into tmp directory
-cd /tmp
-
 # Unzipping application
 sudo unzip webapp.zip
 
