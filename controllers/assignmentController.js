@@ -14,7 +14,7 @@ const createAssignment = async (req, res) => {
   if (bodyLength == 0) {
     res.sendStatus(400);
   } else {
-    if (!isValidNumber(points) || !isValidNumber(num_of_attempts)) {
+    if (!isValidNumber(points) || !isValidNumber(num_of_attemps)) {
       return res.sendStatus(400);
     }
     // console.log(req.User.id);
@@ -89,7 +89,7 @@ const updateAssignment = async (req, res) => {
   } else {
     // console.log(req.User.id);
     try {
-      if (!isValidNumber(points) || !isValidNumber(num_of_attempts)) {
+      if (!isValidNumber(points) || !isValidNumber(num_of_attemps)) {
         return res.sendStatus(400);
       }
       const assignment = await Assignment.findByPk(id);
