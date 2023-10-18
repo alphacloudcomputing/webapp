@@ -21,12 +21,17 @@ jobs:
       - name: Set .env file
         run: |
          touch .env
-         echo DATABASE_PASSWORD = manav1201 >> .env
-         echo DATABASE_NAME = cloud_01 >> .env
-         echo DATABASE_USER = root >> .env
-         echo PORT = 3306 >> .env
-         echo HOSTNAME = 127.0.0.1 >> .env
-         echo DEFAULTUSERPATH = "" >> .env
+         echo DATABASE_PASSWORD = ${{ secrets.DATABASE_PASSWORD }} >> .env
+         echo DATABASE_NAME = ${{ secrets.DATABASE_NAME }} >> .env
+         echo DATABASE_USER = ${{ secrets.DATABASE_USER }} >> .env
+         echo PORT = ${{ secrets.PORT }} >> .env
+         echo HOSTNAME = ${{ secrets.HOSTNAME }} >> .env
+         echo DEFAULTUSERPATH = ${{ secrets.DEFAULTUSERPATH }} >> .env
+
+      - name: Create user.csv
+        run: |
+         touch users.csv
+         echo "${{ secrets.USER_CSV }}" >> users.csv
           
       - name: Build application artifact
         run: zip -r webapp.zip .
@@ -36,7 +41,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
           
       - name: Initialize packer configuration
         run: |
