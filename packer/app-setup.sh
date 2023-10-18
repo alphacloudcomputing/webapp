@@ -7,4 +7,4 @@ sudo unzip webapp.zip -d web-app
 cd web-app
 
 # Installing dependencies of nodejs
-npm i
+sudo npm i
