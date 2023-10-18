@@ -14,4 +14,13 @@ sudo systemctl start mariadb
 sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'manav1201'; flush privileges;"
 
 # Installing npm and nodejs
-sudo apt install npm nodejs -y
+sudo apt install npm nodejs unzip -y
+
+# Unzipping application
+sudo unzip webapp.zip
+
+# Changing to webapp directory
+cd webapp
+
+# Installing dependencies of nodejs
+npm i
