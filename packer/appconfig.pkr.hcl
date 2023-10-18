@@ -35,19 +35,19 @@ source "amazon-ebs" "cloud-app-ami" {
   ami_users = [
     "856405792108",
   ]
-  
+
   // profile = "dev"
-  instance_type   = "t2.micro"
-  source_ami      = "${var.source_ami}"
-  ssh_username    = "${var.ssh_username}"
-  subnet_id       = "${var.subnet_id}"
-  
+  instance_type = "t2.micro"
+  source_ami    = "${var.source_ami}"
+  ssh_username  = "${var.ssh_username}"
+  subnet_id     = "${var.subnet_id}"
+
   aws_polling {
     delay_seconds = 120
     max_attempts  = 50
   }
 
-  launch_block_device_mappings{
+  launch_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/xvda"
     volume_size           = 8
@@ -58,6 +58,12 @@ source "amazon-ebs" "cloud-app-ami" {
 
 build {
   sources = ["source.amazon-ebs.cloud-app-ami"]
+
+  provisioner "file" {
+    source      = "./webapp.zip"
+    destination = "/tmp"
+  }
+
   provisioner "shell" {
     script = "setup.sh"
   }
