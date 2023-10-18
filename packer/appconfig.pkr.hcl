@@ -7,6 +7,22 @@ packer {
   }
 }
 
+variable "database_name" {
+  type = string
+}
+
+variable "database_password" {
+  type = string
+}
+
+variable "database_user" {
+  type = string
+}
+
+variable "hostname" {
+  type = string
+}
+
 variable "aws_region" {
   type = string
 }
@@ -58,8 +74,8 @@ build {
   provisioner "shell" {
     script = "setup.sh"
 
-    environment_vars = ["DATABASE_NAME=${var.DATABASE_NAME}", "DATABASE_USER=${var.DATABASE_USER}", "HOSTNAME=${var.HOSTNAME}",
-    "DATABASE_PASSWORD=${var.DATABASE_PASSWORD}"]
+    environment_vars = ["DATABASE_NAME=${var.database_name}", "DATABASE_USER=${var.database_user}", "HOSTNAME=${var.hostname}",
+    "DATABASE_PASSWORD=${var.database_password}"]
   }
 
   provisioner "file" {
