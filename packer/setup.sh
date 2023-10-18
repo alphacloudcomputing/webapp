@@ -11,7 +11,7 @@ sudo apt install mariadb-server -y
 sudo systemctl start mariadb
 
 # Setting up root user password
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'manav1201'; flush privileges;"
+sudo mysql -e "ALTER USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; flush privileges;"
 
 # Installing npm and nodejs
 sudo apt install npm nodejs unzip -y

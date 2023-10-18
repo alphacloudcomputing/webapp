@@ -8,13 +8,11 @@ packer {
 }
 
 variable "aws_region" {
-  type    = string
-  default = "us-east-1"
+  type = string
 }
 
 variable "source_ami" {
-  type    = string
-  default = "ami-06db4d78cb1d3bbf9"
+  type = string
 }
 
 variable "ssh_username" {
@@ -23,8 +21,7 @@ variable "ssh_username" {
 }
 
 variable "subnet_id" {
-  type    = string
-  default = "subnet-0e00ea503c04d4058"
+  type = string
 }
 
 source "amazon-ebs" "cloud-app-ami" {
@@ -35,19 +32,19 @@ source "amazon-ebs" "cloud-app-ami" {
   ami_users = [
     "856405792108",
   ]
-  
+
   // profile = "dev"
-  instance_type   = "t2.micro"
-  source_ami      = "${var.source_ami}"
-  ssh_username    = "${var.ssh_username}"
-  subnet_id       = "${var.subnet_id}"
-  
+  instance_type = "t2.micro"
+  source_ami    = "${var.source_ami}"
+  ssh_username  = "${var.ssh_username}"
+  subnet_id     = "${var.subnet_id}"
+
   aws_polling {
     delay_seconds = 120
     max_attempts  = 50
   }
 
-  launch_block_device_mappings{
+  launch_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/xvda"
     volume_size           = 8
@@ -58,12 +55,15 @@ source "amazon-ebs" "cloud-app-ami" {
 
 build {
   sources = ["source.amazon-ebs.cloud-app-ami"]
-    provisioner "shell" {
+  provisioner "shell" {
     script = "setup.sh"
+
+    environment_vars = ["DATABASE_NAME=${var.DATABASE_NAME}", "DATABASE_USER=${var.DATABASE_USER}", "HOSTNAME=${var.HOSTNAME}",
+    "DATABASE_PASSWORD=${var.DATABASE_PASSWORD}"]
   }
 
   provisioner "file" {
-    source = "../webapp.zip"
+    source      = "../webapp.zip"
     destination = "~/"
   }
 
