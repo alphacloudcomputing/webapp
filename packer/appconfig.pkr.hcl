@@ -58,6 +58,11 @@ source "amazon-ebs" "cloud-app-ami" {
 
 build {
   sources = ["source.amazon-ebs.cloud-app-ami"]
+  provisioner "file" {
+    source = "webapp.zip"
+    destination = "~/"
+  }
+  
   provisioner "shell" {
     script = "setup.sh"
   }
