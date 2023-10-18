@@ -22,9 +22,8 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.1
         with: 
           ref: ${{ github.ref }}
-          check-name: 'Checking Integration Test'
+          check-name: 'Run-Integration-test-for-healthz'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          running-workflow-name: ./.github/workflows/healthCheck.yaml
           wait-interval: 10
           allowed-conclusions: success
 
