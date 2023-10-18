@@ -31,7 +31,7 @@ jobs:
       - name: Create user.csv
         run: |
          touch users.csv
-         echo "${{ secrets.USER_CSV }}" >> users.csv
+         echo "${{ secrets.USERS_CSV }}" >> users.csv
           
       - name: Build application artifact
         run: zip -r webapp.zip .
