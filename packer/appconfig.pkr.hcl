@@ -87,4 +87,3 @@ build {
     script = "app-setup.sh"
   }
 }
-}
