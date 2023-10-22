@@ -134,7 +134,7 @@ const deleteAssignment = async (req, res) => {
           console.log(assignment.userId);
           if (req.User.id == assignment.userId) {
             await assignment.destroy();
-            res.status(200).send("Assignment Deleted successfully.");
+            res.status(204).send("Assignment Deleted successfully.");
           } else {
             res.sendStatus(403);
           }
