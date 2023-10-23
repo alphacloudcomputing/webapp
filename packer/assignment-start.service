@@ -1,0 +1,22 @@
+#!/bin/bash
+
+[Unit]
+
+Description=webapp_start 
+After=network.target
+ConditionPathExists=/home/admin/web-app 
+
+[Service] 
+
+Type=simple 
+Environment=NODE_PORT=6000 
+User=csye6225 
+Group=csye6225 
+WorkingDirectory=/home/admin 
+ExecStart=/usr/bin/node /home/admin/web-app/index.js 
+Restart=on-failure 
+RestartSec=3 
+
+[Install]
+
+WantedBy=multi-user.target

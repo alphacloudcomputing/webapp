@@ -15,3 +15,12 @@ sudo mysql -e "ALTER USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_
 
 # Installing npm and nodejs
 sudo apt install npm nodejs unzip -y
+
+# Moving the .service file to systemd service
+sudo mv /home/admin/web-app/packer/assignment-start.service /lib/systemd/system
+
+# Creating new usergroup 
+sudo groupadd csye6225
+
+# Giving privileges
+sudo useradd -s /bin/false -g csye6225 -d /home/admin -m csye6225
