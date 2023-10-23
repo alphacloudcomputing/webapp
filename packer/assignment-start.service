@@ -3,8 +3,8 @@
 [Unit]
 
 Description=webapp_start 
-After=network.target
 ConditionPathExists=/home/admin/web-app 
+After=network.target
 
 [Service] 
 
