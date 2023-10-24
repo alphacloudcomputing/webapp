@@ -7,7 +7,8 @@ After=network.target
 [Service] 
 
 Type=simple 
-Environment=NODE_PORT=6000 
+Environment=NODE_PORT=6000
+EnvironmentFile=/home/admin/web-app/.env
 User=csye6225 
 Group=csye6225 
 WorkingDirectory=/home/admin 
