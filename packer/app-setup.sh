@@ -10,7 +10,7 @@ cd web-app
 sudo mv /home/admin/web-app/users.csv /opt
 
 # Moving the .service file to systemd service
-sudo mv /home/admin/web-app/packer/assignment-start.service /lib/systemd/system
+sudo mv /home/admin/web-app/packer/assignment-start.service /etc/systemd/system
 
 # Installing dependencies of nodejs
 sudo npm i
