@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # Unzipping application
-sudo unzip webapp.zip -d web-app
+sudo unzip webapp.zip -d /opt/webapp
 
 # Changing to webapp directory
 cd web-app

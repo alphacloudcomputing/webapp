@@ -20,4 +20,4 @@ sudo apt install npm nodejs unzip -y
 sudo groupadd csye6225
 
 # Giving privileges
-sudo useradd -s /bin/false -g csye6225 -d /home/admin -m csye6225
+sudo useradd -s /bin/false -g csye6225 -d /opt/webapp -m csye6225

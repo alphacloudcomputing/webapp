@@ -1,7 +1,7 @@
 [Unit]
 
 Description=webapp_start 
-ConditionPathExists=/home/admin/web-app 
+ConditionPathExists=/opt/webapp 
 After=network.target
 
 [Service] 
@@ -10,8 +10,8 @@ Type=simple
 EnvironmentFile=/etc/environment
 User=csye6225 
 Group=csye6225 
-WorkingDirectory=/home/admin 
-ExecStart=/usr/bin/node /home/admin/web-app/index.js 
+WorkingDirectory=/opt/webapp
+ExecStart=/usr/bin/node /opt/webapp/index.js 
 Restart=on-failure 
 RestartSec=3 
 
