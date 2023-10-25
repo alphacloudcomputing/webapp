@@ -5,7 +5,7 @@ sudo cp webapp.zip /opt/webapp
 sudo unzip webapp.zip -d /opt/webapp
 
 # Changing to webapp directory
-cd /opt
+cd /opt/webapp
 
 # Moving users.csv to opt directory
 sudo mv /opt/webapp/users.csv /opt
