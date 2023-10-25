@@ -16,6 +16,10 @@ sudo mv /opt/webapp/packer/assignment-start.service /etc/systemd/system
 # Installing dependencies of nodejs
 sudo npm i
 
+# Changing permissions of binaries
+sudo chown -R csye6225:csye6225 /opt/webapp
+sudo chmod g+x /opt/webapp
+
 # Starting application services
 sudo systemctl daemon-reload
 sudo systemctl enable assignment-start
