@@ -1,16 +1,17 @@
 #! /bin/bash
 
+sudo cp webapp.zip /opt/webapp
 # Unzipping application
 sudo unzip webapp.zip -d /opt/webapp
 
 # Changing to webapp directory
-cd web-app
+cd /opt
 
 # Moving users.csv to opt directory
-sudo mv /home/admin/web-app/users.csv /opt
+sudo mv /opt/webapp/users.csv /opt
 
 # Moving the .service file to systemd service
-sudo mv /home/admin/web-app/packer/assignment-start.service /etc/systemd/system
+sudo mv /opt/webapp/packer/assignment-start.service /etc/systemd/system
 
 # Installing dependencies of nodejs
 sudo npm i
