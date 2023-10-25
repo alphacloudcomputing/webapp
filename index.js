@@ -39,33 +39,30 @@ app.delete("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
 });
 
 //Route configuration
-app.all("/healthz", function (req, res) {
-  if (req.method != "GET") {
-    res.status(405).send();
-  } else {
-    // Setting no-cache
-    res.set("Cache-Control", "no-cache");
-    // Setting up variable bodyParser to check if any content is present in request body
-    const bodyParser = parseInt(req.get("Content-Length") || "0", 10);
-    // Checking if the request contains a body
-    if (Object.keys(req.query).length > 0 || bodyParser > 0) {
-      res.status(400).send();
+app.all('/healthz', async (req, res) => {
+  res.set('Cache-control', 'no-cache');
+
+  try {
+    const bodyLength = parseInt(req.get('Content-Length') || '0', 10);
+    if (req.method === 'GET') {
+      // Checking for body and query lengths
+      if (Object.keys(req.query).length > 0 || bodyLength > 0) {
+        res.status(400).send(); // Bad request
+      } else {
+        const data = await conEst.sql();
+        if (!data) {
+          res.status(503).send(); // Not connected
+        } else {
+          res.status(200).send(); // Connected
+        }
+      }
     } else {
-      conEst
-        .conn()
-        .then((data) => {
-          // When connection is established
-          if (data) {
-            res.status(200).send();
-          } else {
-            res.status(503).send();
-          }
-        })
-        // Logging error if connection failed
-        .catch((err) => {
-          console.log(err);
-        });
+      res.status(405).send(); // Method not allowed (except GET)
     }
+  } catch (error) {
+    // Handle the database connection error here
+    console.error('Database connection error:', error);
+    res.status(503).send(); // Database connection error
   }
 });
 
@@ -90,4 +87,4 @@ app.listen(6000, (err) => {
     console.log("listening on port 6000");
   }
 });
-module.exports = app
+module.exports = app;

@@ -16,21 +16,28 @@ const sequelize = new Sequelize(
 );
 
 const pool = mariadb.createPool({
-	host: process.env.HOSTNAME,
-	user: process.env.DATABASE_USER,
-	password: process.env.DATABASE_PASSWORD
-})
+  host: process.env.HOSTNAME,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+});
 
 // Setting up Sequelize
 async function initialize() {
   await pool.getConnection().then((connection) => {
-    connection.query(`CREATE DATABASE IF NOT EXISTS\`${process.env.DATABASE_NAME}\`;`)
+    connection.query(
+      `CREATE DATABASE IF NOT EXISTS\`${process.env.DATABASE_NAME}\`;`
+    );
   });
 
   require("./models/users.js").User;
   require("./models/assignments.js").assignment;
-  require("./models/relations.js")
+  require("./models/relations.js");
   await sequelize.sync();
+}
+
+initialize();
+
+const conn = () => {
   return sequelize
     .authenticate()
     .then(async () => {
@@ -41,12 +48,11 @@ async function initialize() {
       console.log("Connection error: " + error);
       return false;
     });
-}
-
-initialize();
+};
 
 // Exporting method conn
 module.exports = {
   sequelize: sequelize,
   conn: initialize,
+  sql: conn,
 };
