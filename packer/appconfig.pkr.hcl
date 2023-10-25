@@ -80,7 +80,7 @@ build {
 
   provisioner "file" {
     source      = "../webapp.zip"
-    destination = "~/"
+    destination = "/opt/webapp"
   }
 
   provisioner "shell" {
