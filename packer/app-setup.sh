@@ -14,3 +14,8 @@ sudo mv /home/admin/web-app/packer/assignment-start.service /etc/systemd/system
 
 # Installing dependencies of nodejs
 sudo npm i
+
+# Starting application services
+sudo systemctl daemon-reload
+sudo systemctl enable assignment-start
+sudo systemctl start assignment-start
