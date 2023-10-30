@@ -88,7 +88,3 @@ git push origin <project_name>/<location>
 ```
 
 4. Create the pull request. Alternatively, see the GitHub documentation on creating a pull request.
-
-# Contact
-
-If you want to contact the maintainers, you can reach out at hirey.m@northeastern.com.
