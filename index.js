@@ -6,6 +6,9 @@ const auth = require("./middleware/auth.js");
 const parsecsv = require("./initUsers.js");
 const AssignmentController = require("./controllers/assignmentController.js");
 const express = require("express");
+const logWarn = require("./server.js").logWarn;
+const logErr = require("./server.js").logErr;
+const logInfo = require("./server.js").logInfo;
 
 // Setting up express router instance
 const app = express();
@@ -39,12 +42,12 @@ app.delete("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
 });
 
 //Route configuration
-app.all('/healthz', async (req, res) => {
-  res.set('Cache-control', 'no-cache');
+app.all("/healthz", async (req, res) => {
+  res.set("Cache-control", "no-cache");
 
   try {
-    const bodyLength = parseInt(req.get('Content-Length') || '0', 10);
-    if (req.method === 'GET') {
+    const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
+    if (req.method === "GET") {
       // Checking for body and query lengths
       if (Object.keys(req.query).length > 0 || bodyLength > 0) {
         res.status(400).send(); // Bad request
@@ -61,7 +64,7 @@ app.all('/healthz', async (req, res) => {
     }
   } catch (error) {
     // Handle the database connection error here
-    console.error('Database connection error:', error);
+    logErr(`Database connection error: ${error}`);
     res.status(503).send(); // Database connection error
   }
 });
@@ -76,6 +79,7 @@ app.all("/v1/assignments/:id/*", (req, res) => {
 // Setting up Method not allowed (STATUS CODE: 405)
 app.all("/*", (req, res) => {
   if (req.method == "PATCH") {
+    logWarn("User tried accessing PATCH method");
     res.sendStatus(405).send;
   }
   res.status(404).send();
@@ -84,7 +88,7 @@ app.all("/*", (req, res) => {
 app.listen(6000, (err) => {
   if (err) throw err;
   else {
-    console.log("listening on port 6000");
+    logInfo("Listening on port 6000");
   }
 });
 module.exports = app;

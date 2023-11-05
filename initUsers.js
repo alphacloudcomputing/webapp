@@ -1,21 +1,24 @@
-require('dotenv').config();
+require("dotenv").config();
 const users = require("./models/users").User;
 const server = require("./server.js");
 const fs = require("fs");
 const csv = require("fast-csv");
+const logWarn = require("./server.js").logWarn;
+const logErr = require("./server.js").logErr;
+const logInfo = require("./server.js").logInfo;
 
 const path = process.env.DEFAULTUSERPATH;
 
 const popData = async () => {
   await server.conn();
   try {
-    if(path ===""){
-      console.log("Default users file not found", path)
-      return
-    }else{
-      console.log("Default users file found", path)
+    if (path === "") {
+      logWarn("Default users file not found");
+      return;
+    } else {
+      logInfo(`Default users file found ${path}`);
     }
-    
+
     csv
       .parseStream(fs.createReadStream(path), { headers: true })
       .on("data", async (data) => {
@@ -35,10 +38,10 @@ const popData = async () => {
         }
       })
       .on("end", () => {
-        console.log("Imported data to server");
+        logInfo("Imported data to server");
       });
   } catch (err) {
-    console.log("Not created: " + err.message);
+    logInfo("Not Created Entries");
   }
 };
 
