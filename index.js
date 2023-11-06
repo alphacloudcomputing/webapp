@@ -44,8 +44,8 @@ app.delete("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
 
 //Route configuration
 app.all("/healthz", async (req, res) => {
-  res.set("Cache-control", "no-cache");
   AssignmentController.stats.increment(`api.healthz.get.calls`)
+  res.set("Cache-control", "no-cache");
   try {
     const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
     if (req.method === "GET") {

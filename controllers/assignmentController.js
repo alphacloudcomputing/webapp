@@ -6,7 +6,7 @@ const logInfo = require("../server.js").logInfo;
 require("../server.js");
 const Assignment = require("../models/assignments.js").assignment;
 
-const stats = statsd({
+const stats = new statsd({
   host: "localhost",
   port: 8125,
 })
@@ -186,5 +186,5 @@ module.exports = {
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
-  stats,
+  stats:stats
 };
