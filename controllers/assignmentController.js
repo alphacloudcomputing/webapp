@@ -1,15 +1,22 @@
 const { ValidationError } = require("sequelize");
+const statsd = require("node-statsd");
 const logWarn = require("../server.js").logWarn;
 const logErr = require("../server.js").logErr;
 const logInfo = require("../server.js").logInfo;
 require("../server.js");
 const Assignment = require("../models/assignments.js").assignment;
 
+const stats = statsd({
+  host: "localhost",
+  port: 8125,
+})
+
 const isValidNumber = (value) => {
   return Number.isInteger(Number(value));
 };
 
 const createAssignment = async (req, res) => {
+  stats.increment(`api.assignments.post.calls`)
   const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
   const { name, points, num_of_attemps, deadline } = req.body;
   if (bodyLength == 0) {
@@ -47,6 +54,7 @@ const createAssignment = async (req, res) => {
 };
 
 const getAllAssignments = async (req, res) => {
+  stats.increment(`api.assignments.getall.calls`)
   const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
   if (bodyLength > 0) {
     logErr("User request contains body")
@@ -66,6 +74,7 @@ const getAllAssignments = async (req, res) => {
 };
 
 const getAssignmentById = async (req, res) => {
+  stats.increment(`api.assignments.getbyid.calls`)
   const { id } = req.params;
   const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
   if (bodyLength > 0) {
@@ -91,6 +100,7 @@ const getAssignmentById = async (req, res) => {
 };
 
 const updateAssignment = async (req, res) => {
+  stats.increment(`api.assignments.update.calls`)
   const { id } = req.params;
   const { name, points, num_of_attemps, deadline } = req.body;
   if (!req.User.id) {
@@ -134,6 +144,7 @@ const updateAssignment = async (req, res) => {
 };
 
 const deleteAssignment = async (req, res) => {
+  stats.increment(`api.assignments.delete.calls`)
   const { id } = req.params;
   const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
   if (bodyLength > 0) {
@@ -175,4 +186,5 @@ module.exports = {
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
+  stats,
 };

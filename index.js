@@ -10,6 +10,7 @@ const logWarn = require("./server.js").logWarn;
 const logErr = require("./server.js").logErr;
 const logInfo = require("./server.js").logInfo;
 
+
 // Setting up express router instance
 const app = express();
 app.use(express.json());
@@ -44,7 +45,7 @@ app.delete("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
 //Route configuration
 app.all("/healthz", async (req, res) => {
   res.set("Cache-control", "no-cache");
-
+  AssignmentController.stats.increment(`api.healthz.get.calls`)
   try {
     const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
     if (req.method === "GET") {
