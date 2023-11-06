@@ -53,7 +53,7 @@ const logger = winston.createLogger({
         format: winston.format.combine(winston.format.colorize(),winston.format.json(),customFormat),
       }),
       new winston.transports.File({
-        filename: 'webapp.log',
+        filename: '/var/log/webapp.log',
         format: winston.format.combine(winston.format.timestamp(),winston.format.json())
     })
   ],
