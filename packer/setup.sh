@@ -16,6 +16,10 @@ sudo DEBIAN_FRONTEND=noninteractive
 # Installing npm and nodejs
 sudo apt install npm nodejs unzip -y
 
+# Installing AWS Cloudwatch
+sudo wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+
 # Creating new usergroup 
 sudo groupadd csye6225
 
