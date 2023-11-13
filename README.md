@@ -88,3 +88,4 @@ git push origin <project_name>/<location>
 ```
 
 4. Create the pull request. Alternatively, see the GitHub documentation on creating a pull request.
+# License
