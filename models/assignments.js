@@ -35,6 +35,5 @@ const assignment = sequelize.define("assignments", {
 });
 
 module.exports = {
-  assignment: assignment,
-  sequelize: sequelize,
+  assignment: assignment
 };

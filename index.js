@@ -5,6 +5,7 @@ const conEst = require("./server.js");
 const auth = require("./middleware/auth.js");
 const parsecsv = require("./initUsers.js");
 const AssignmentController = require("./controllers/assignmentController.js");
+const SubmissionController = require("./controllers/submissionController.js");
 const express = require("express");
 const logWarn = require("./server.js").logWarn;
 const logErr = require("./server.js").logErr;
@@ -40,6 +41,10 @@ app.put("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
 //Delete Assignment
 app.delete("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
   AssignmentController.deleteAssignment(req, res);
+});
+
+app.post("/v1/assignments/:id/submission", auth.verifyUser, async (req, res) => {
+  SubmissionController.createSubmission(req, res);
 });
 
 //Route configuration
