@@ -3,7 +3,7 @@ const statsd = require("node-statsd");
 const logWarn = require("../server.js").logWarn;
 const logErr = require("../server.js").logErr;
 const logInfo = require("../server.js").logInfo;
-const assignment = require("../models/assignments.js").assignment;
+const Assignment = require("../models/assignments.js").assignment;
 const Submission = require("../models/submission.js").submission;
 const AWS = require("aws-sdk");
 // const User = require("../models/users.js");
@@ -22,7 +22,7 @@ const createSubmission = async (req, res) => {
     });
 
     // Fetch the assignment
-    const assignmentRecord = await assignment.findByPk(assignmentId);
+    const assignmentRecord = await Assignment.findByPk(assignmentId);
     if (!assignmentRecord) {
       res.sendStatus(404);
       return "Assignment not found";
@@ -40,10 +40,20 @@ const createSubmission = async (req, res) => {
         userId: userId,
         assignmentId: assignmentId,
       });
-      res.status(201).send(submission);
+      const responseSubmission = { 
+        submissionID:submission.id ,
+        submissionUrl: submission_url,
+        submissionDate: submission.submission_date,
+        submissionUpdatedAt: submission.submission_updated
+       };
+      res.status(201).send(responseSubmission);
       const data = {
+        first_name: req.User.first_name,
+        last_name: req.User.last_name,
         submissionUrl: submission_url,
         userEmail: req.User.email,
+        submission_date: submission.submission_date,
+        assignment_name: assignmentRecord.name
       };
 
       AWS.config.update({
@@ -55,7 +65,7 @@ const createSubmission = async (req, res) => {
       await snsNotification(data, "webapp");
     }
   } catch (error) {
-    logErr("Error in createSubmission:", error);
+    logErr(`Error in createSubmission:${error}`);
     res.sendStatus(400);
   }
 };
