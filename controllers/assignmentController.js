@@ -4,8 +4,8 @@ const logWarn = require("../server.js").logWarn;
 const logErr = require("../server.js").logErr;
 const logInfo = require("../server.js").logInfo;
 require("../server.js");
+const users = require("../models/users.js").User;
 const Assignment = require("../models/assignments.js").assignment;
-
 const stats = new statsd({
   host: "localhost",
   port: 8125,

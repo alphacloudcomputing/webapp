@@ -5,25 +5,25 @@ const winston = require("winston");
 require("dotenv").config();
 
 function logInfo(message) {
-  const stack = new Error().stack.split('\n')[2]; // Get the caller
+  const stack = new Error().stack.split("\n")[2]; // Get the caller
   const match = stack.match(/at\s+(?:.*\s)?(?:.*[\/\\])([^\/\\]+:\d+:\d+)/);
-  const fileInfo = match ? match[1] : 'unknown';
+  const fileInfo = match ? match[1] : "unknown";
 
   logger.info(`[${fileInfo}] - ${message}`);
 }
 
 function logErr(message) {
-  const stack = new Error().stack.split('\n')[2]; // Get the caller
+  const stack = new Error().stack.split("\n")[2]; // Get the caller
   const match = stack.match(/at\s+(?:.*\s)?(?:.*[\/\\])([^\/\\]+:\d+:\d+)/);
-  const fileInfo = match ? match[1] : 'unknown';
+  const fileInfo = match ? match[1] : "unknown";
 
   logger.error(`[${fileInfo}] - ${message}`);
 }
 
 function logWarn(message) {
-  const stack = new Error().stack.split('\n')[2]; // Get the caller
+  const stack = new Error().stack.split("\n")[2]; // Get the caller
   const match = stack.match(/at\s+(?:.*\s)?(?:.*[\/\\])([^\/\\]+:\d+:\d+)/);
-  const fileInfo = match ? match[1] : 'unknown';
+  const fileInfo = match ? match[1] : "unknown";
 
   logger.warn(`[${fileInfo}] - ${message}`);
 }
@@ -37,25 +37,30 @@ winston.addColors({
 
 const customFormat = winston.format.combine(
   winston.format.timestamp({
-    format: 'YYYY-MM-DD HH:mm:ss'
+    format: "YYYY-MM-DD HH:mm:ss",
   }),
   winston.format.printf((info) => {
     return `${info.timestamp} [${info.level}]:${info.message}`;
   })
 );
 
-
 // Create a Winston logger
 const logger = winston.createLogger({
-  level: 'info',
+  level: "info",
   transports: [
-      new winston.transports.Console({
-        format: winston.format.combine(winston.format.timestamp(),winston.format.json()),
-      }),
-      new winston.transports.File({
-        filename: '/var/log/webapp.log',
-        format: winston.format.combine(winston.format.timestamp(),winston.format.json())
-    })
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      ),
+    }),
+    new winston.transports.File({
+      filename: "/var/log/webapp.log",
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      ),
+    }),
   ],
 });
 
@@ -85,24 +90,26 @@ async function initialize() {
       connection.query(
         `CREATE DATABASE IF NOT EXISTS\`${process.env.DATABASE_NAME}\`;`
       );
+      connection.release();
     })
     .catch((error) => {
       logErr(`Unable to Connect to Database: ${error}`);
     });
 
   require("./models/users.js").User;
-  require("./models/assignments.js").assignment;
+  // require("./models/assignments.js").assignment;
+  // require("./models/submission.js").submission;
   require("./models/relations.js");
   await sequelize.sync();
 }
 
 initialize();
 
-const conn = () => {
-  return sequelize
-    .authenticate()
-    .then(async () => {
-      logInfo("Connection established with database");
+const conn = async () => {
+  return await pool
+    .getConnection()
+    .then((connection) => {
+      connection.release();
       return true;
     })
     .catch((error) => {
@@ -110,6 +117,19 @@ const conn = () => {
       return false;
     });
 };
+
+// const conn = () => {
+//   return sequelize
+//     .authenticate()
+//     .then(async () => {
+//       logInfo("Connection established with database");
+//       return true;
+//     })
+//     .catch((error) => {
+//       logErr(`Connection error: ${error}`);
+//       return false;
+//     });
+// };
 
 // Exporting method conn
 module.exports = {
