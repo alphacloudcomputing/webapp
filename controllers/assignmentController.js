@@ -35,8 +35,17 @@ const createAssignment = async (req, res) => {
         deadline,
         userId: req.User.id,
       });
+      const responseAssignment = { 
+        id: assignment.id,
+        name, 
+        points, 
+        num_of_attemps, 
+        deadline,
+        assignment_created: assignment.createdAt, 
+        assignment_updated: assignment.updatedAt 
+      };
       logErr("Assignment successfully created");
-      res.status(201).send(assignment);
+      res.status(201).send(responseAssignment);
     } catch (e) {
       if (e instanceof ValidationError) {
         res

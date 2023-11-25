@@ -21,7 +21,7 @@ const submission = sequelize.define(
   {
     timestamps: true,
     createdAt: "submission_date",
-    updatedAt: "assignment_updated",
+    updatedAt: "submission_updated",
     underscore: true,
   }
 );
