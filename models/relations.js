@@ -4,4 +4,7 @@ const Submission = require('./submission.js').submission;
 
 User.hasMany(Assignment);
 User.hasMany(Submission);
-Assignment.hasMany(Submission);
+Assignment.hasMany(Submission, {
+    onDelete: "cascade",
+    hooks: true
+});

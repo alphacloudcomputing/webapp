@@ -58,8 +58,6 @@ const createSubmission = async (req, res) => {
 
       AWS.config.update({
         region: 'us-east-1',
-        accessKeyId: process.env.ACCESSKEY,
-        secretAccessKey: process.env.SECRETACCESSKEY,
       });
       
       await snsNotification(data, "webapp");
