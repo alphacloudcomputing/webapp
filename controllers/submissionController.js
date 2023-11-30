@@ -9,7 +9,13 @@ const AWS = require("aws-sdk");
 // const User = require("../models/users.js");
 require("../server.js");
 
+const stats = new statsd({
+  host: "localhost",
+  port: 8125,
+})
+
 const createSubmission = async (req, res) => {
+  stats.increment(`api.submission.post.calls`)
   try {
     const userId = req.User.id;
     const { submission_url } = req.body;
