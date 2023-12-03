@@ -50,9 +50,8 @@ jobs:
       - name: Build AMI with Packer
         run: |
             cd packer 
-            AMI_ID=$(packer build appconfig.pkr.hcl | grep -oP 'ami-\w+' | cut -d ' ' -f 3)
+            AMI_ID=$(packer build appconfig.pkr.hcl | grep -oP 'ami-\w+')
             echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
-            echo $AMI_ID
         env:
           PKR_VAR_database_name: '${{secrets.DATABASE_NAME}}'
           PKR_VAR_database_password: ${{ secrets.DATABASE_PASSWORD }} 
