@@ -73,6 +73,11 @@ jobs:
         run: |
           aws ec2 create-launch-template-version --launch-template-name "webAppLaunchTemplate" --source-version "\$Default" --launch-template-data "{\"ImageId\":\"${{ env.AMI_ID }}\"}"
       
+      - name: Update Auto Scaling Group
+        run: |
+          echo "Updating ASG with launch template version: $LAUNCH_TEMPLATE_VERSION"
+          aws autoscaling update-auto-scaling-group --auto-scaling-group-name auto-scaling-group --launch-template "LaunchTemplateName=webAppLaunchTemplate,Version=$LAUNCH_TEMPLATE_VERSION"
+      
       - name: Refresh Auto-Scaling Group
         id: refresh_asg
         run: |
