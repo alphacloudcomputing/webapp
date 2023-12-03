@@ -61,3 +61,8 @@ jobs:
           PKR_VAR_aws_region: "${{ secrets.AWS_REGION }}"
           PKR_VAR_source_ami: "${{ secrets.SOURCE_AMI }}"
           PKR_VAR_subnet_id: "${{ secrets.SUBNET_ID }}"
+          
+      - name: Update Launch Template
+        run: |
+          latest_ami_id=$(aws ec2 describe-images --filters "Name=name,Values=app-ami" --query 'Images[*].[ImageId]' --output text)
+          aws ec2 create-launch-template-version --launch-template-name "my-launch-template" --source-version "\$Default" --launch-template-data "{\"ImageId\":\"$AMI_ID\"}"
