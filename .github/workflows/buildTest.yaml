@@ -50,7 +50,7 @@ jobs:
       - name: Build AMI with Packer
         run: |
             cd packer 
-            AMI_ID=$(packer build appconfig.pkr.hcl | grep 'AMI:' | cut -d ' ' -f 3)
+            AMI_ID=$(packer build appconfig.pkr.hcl | grep -oP 'ami-\w+' | cut -d ' ' -f 3)
             echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
             echo $AMI_ID
         env:
@@ -62,7 +62,7 @@ jobs:
           PKR_VAR_source_ami: "${{ secrets.SOURCE_AMI }}"
           PKR_VAR_subnet_id: "${{ secrets.SUBNET_ID }}"
 
-      - name: Configure Dev AWS credentials
+      - name: Configure Demo AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.ACCESS_KEY_DEMO }}
