@@ -1,63 +1,63 @@
-name: CI Pipeline on Validation 
+name: CI Pipeline on Validation
 
 on:
-    push:
-        branches:
-          - main
+  push:
+    branches:
+      - main
 
 jobs:
   test-and-package:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: "18.x"
 
       - name: Waiting for integration test
         uses: lewagon/wait-on-check-action@v1.3.1
-        with: 
+        with:
           ref: ${{ github.ref }}
-          check-name: 'Run-Integration-test-for-healthz'
+          check-name: "Run-Integration-test-for-healthz"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
           allowed-conclusions: success
 
       - name: Create user.csv
         run: |
-         touch users.csv
-         echo "${{ secrets.USERS_CSV }}" >> users.csv
-          
+          touch users.csv
+          echo "${{ secrets.USERS_CSV }}" >> users.csv
+
       - name: Build application artifact
         run: zip -r webapp.zip .
-        
+
       - name: Configure Dev AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
+
       - name: Initialize packer configuration
         run: |
-            cd packer
-            packer init appconfig.pkr.hcl
-        
+          cd packer
+          packer init appconfig.pkr.hcl
+
       - name: Build AMI with Packer
         run: |
-            cd packer 
-            AMI_PART=$(packer build appconfig.pkr.hcl | grep -oP 'AMI: ami-\w+')
-            AMI_ID=$(echo "${AMI_PART}" | grep -oP '(?<=AMI: )ami-\w+')
-            echo AMI_ID=${AMI_ID} >> $GITHUB_ENV
+          cd packer 
+          AMI_PART=$(packer build appconfig.pkr.hcl | grep -oP 'AMI: ami-\w+')
+          AMI_ID=$(echo "${AMI_PART}" | grep -oP '(?<=AMI: )ami-\w+')
+          echo AMI_ID=${AMI_ID} >> $GITHUB_ENV
         env:
-          PKR_VAR_database_name: '${{secrets.DATABASE_NAME}}'
-          PKR_VAR_database_password: ${{ secrets.DATABASE_PASSWORD }} 
+          PKR_VAR_database_name: "${{secrets.DATABASE_NAME}}"
+          PKR_VAR_database_password: ${{ secrets.DATABASE_PASSWORD }}
           PKR_VAR_database_user: ${{ secrets.DATABASE_USER }}
-          PKR_VAR_hostname: ${{ secrets.HOSTNAME }} 
+          PKR_VAR_hostname: ${{ secrets.HOSTNAME }}
           PKR_VAR_aws_region: "${{ secrets.AWS_REGION }}"
           PKR_VAR_source_ami: "${{ secrets.SOURCE_AMI }}"
           PKR_VAR_subnet_id: "${{ secrets.SUBNET_ID }}"
@@ -68,12 +68,32 @@ jobs:
           aws-access-key-id: ${{ secrets.ACCESS_KEY_DEMO }}
           aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY_DEMO }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
+
+      - name: Check Launch Template Existence in Demo
+        id: check-template-demo
+        run: |
+          TEMPLATE_EXISTS="false"
+          if aws ec2 describe-launch-templates --launch-template-names "webAppLaunchTemplate" --query 'LaunchTemplates[0]' --output text; then
+            TEMPLATE_EXISTS="true"
+          fi
+          echo "TEMPLATE_EXISTS=$TEMPLATE_EXISTS" >> $GITHUB_ENV
+
       - name: Update Launch Template
+        if: env.TEMPLATE_EXISTS == 'true'
         run: |
           aws ec2 create-launch-template-version --launch-template-name "webAppLaunchTemplate" --source-version "\$Default" --launch-template-data "{\"ImageId\":\"${{ env.AMI_ID }}\"}"
-      
+
       - name: Refresh Auto-Scaling Group
-        id: refresh_asg
+        if: env.TEMPLATE_EXISTS == 'true'
         run: |
-          aws autoscaling start-instance-refresh --auto-scaling-group-name "auto-scaling-group" --strategy "Rolling" --preferences "{\"MinHealthyPercentage\": 50, \"InstanceWarmup\": 300}"
+          aws autoscaling start-instance-refresh --auto-scaling-group-name "auto-scaling-group" --strategy "Rolling" --preferences "{\"MinHealthyPercentage\": 50, \"InstanceWarmup\": 300}"]
+          # Loop to wait for instance refresh to complete
+          while : ; do
+            STATUS=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name webapp-autoscaling --query 'InstanceRefreshes[0].Status' --output text)
+            if [[ "$STATUS" == "Successful" || "$STATUS" == "Failed" || "$STATUS" == "Cancelled" ]]; then
+              echo "Instance refresh completed with status: $STATUS"
+              break
+            fi
+            echo "Waiting for instance refresh to complete..."
+            sleep 60 # Wait for 60 seconds before checking again
+          done
