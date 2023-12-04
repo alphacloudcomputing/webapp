@@ -88,4 +88,28 @@ git push origin <project_name>/<location>
 ```
 
 4. Create the pull request. Alternatively, see the GitHub documentation on creating a pull request.
-# License
+
+# Steps to Add an SSL Certificate to a Domain
+1. Purchase or Obtain an SSL Certificate: You can purchase an SSL certificate from a trusted Certificate Authority (CA) or obtain a free one from services like Let's Encrypt.
+2. Generate a Certificate Signing Request (CSR): On your server, generate a CSR. This will be used by the CA to create your SSL certificate. The CSR contains information like the domain name, organization name, locality, country, etc.
+3. Submit the CSR to a Certificate Authority: Provide your CSR to the CA. They will validate your domain and organization details.
+4. Verify Domain Ownership: The CA will require you to prove ownership of the domain. This is usually done via email verification or by uploading a specific file to your website.
+
+# Steps to Upload an SSL Certificate to AWS using AWS CLI
+1. Open your terminal or command prompt.
+2. Navigate to the directory where your SSL certificate files are located.
+3. Run the AWS CLI command to upload the certificate.
+- The command format is as follows:
+```bash
+aws iam upload-server-certificate --server-certificate-name your_certificate_name --certificate-body file://your_certificate.crt --private-key file://your_private_key.key --certificate-chain file://your_certificate_chain.crt --path /cloudfront/your_path/
+```
+- Replace your_certificate_name with a name for your SSL certificate.
+- Replace your_certificate.crt, your_private_key.key, and your_certificate_chain.crt with your certificate files' paths.
+- The --path parameter is optional and can be used to specify a custom path for the certificate in IAM.
+4. Check for successful upload.
+5. After running the command, you should receive a JSON response with details of the uploaded certificate. Ensure there are no errors in the response.
+6. Use the uploaded SSL certificate in your AWS services.
+For example, in an Elastic Load Balancer, you can now select the uploaded SSL certificate by its name.
+For Amazon CloudFront, you can use the certificate for custom SSL.
+7. Verify the SSL setup.
+After configuring your AWS service (like ELB or CloudFront) to use the new SSL certificate, ensure that it's working correctly by accessing your domain via HTTPS.
