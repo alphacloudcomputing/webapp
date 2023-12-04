@@ -18,32 +18,32 @@ app.use(express.json());
 
 // Get all available Assignments from DB
 app.get(
-  "/v1/assignments",
+  "/v2/assignments",
   auth.verifyUser,
   AssignmentController.getAllAssignments
 );
 
 // Find Assignment by ID
-app.get("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
+app.get("/v2/assignments/:id", auth.verifyUser, async (req, res) => {
   AssignmentController.getAssignmentById(req, res);
 });
 
 // Create Assignment
-app.post("/v1/assignments", auth.verifyUser, async (req, res) => {
+app.post("/v2/assignments", auth.verifyUser, async (req, res) => {
   AssignmentController.createAssignment(req, res);
 });
 
 // Update Assignment
-app.put("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
+app.put("/v2/assignments/:id", auth.verifyUser, async (req, res) => {
   AssignmentController.updateAssignment(req, res);
 });
 
 //Delete Assignment
-app.delete("/v1/assignments/:id", auth.verifyUser, async (req, res) => {
+app.delete("/v2/assignments/:id", auth.verifyUser, async (req, res) => {
   AssignmentController.deleteAssignment(req, res);
 });
 
-app.post("/v1/assignments/:id/submission", auth.verifyUser, async (req, res) => {
+app.post("/v2/assignments/:id/submission", auth.verifyUser, async (req, res) => {
   SubmissionController.createSubmission(req, res);
 });
 
@@ -75,10 +75,10 @@ app.all("/healthz", async (req, res) => {
   }
 });
 
-app.all("/v1/assignments/*", (req, res) => {
+app.all("/v2/assignments/*", (req, res) => {
   res.sendStatus(405).send;
 });
-app.all("/v1/assignments/:id/*", (req, res) => {
+app.all("/v2/assignments/:id/*", (req, res) => {
   res.sendStatus(405).send;
 });
 
