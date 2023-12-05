@@ -16,6 +16,9 @@ const stats = new statsd({
 
 const createSubmission = async (req, res) => {
   stats.increment(`api.submission.post.calls`)
+  if (bodyLength == 0) {
+    res.sendStatus(400);
+  } else {
   try {
     const userId = req.User.id;
     const { submission_url } = req.body;
@@ -72,6 +75,7 @@ const createSubmission = async (req, res) => {
     logErr(`Error in createSubmission:${error}`);
     res.sendStatus(400);
   }
+}
 };
 
 const snsNotification = async (data, snsName) => {
