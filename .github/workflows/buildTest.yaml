@@ -89,7 +89,7 @@ jobs:
           aws autoscaling start-instance-refresh --auto-scaling-group-name "auto-scaling-group" --strategy "Rolling" --preferences "{\"MinHealthyPercentage\": 50, \"InstanceWarmup\": 300}"]
           # Loop to wait for instance refresh to complete
           while : ; do
-            STATUS=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name webapp-autoscaling --query 'InstanceRefreshes[0].Status' --output text)
+            STATUS=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "auto-scaling-group" --query 'InstanceRefreshes[0].Status' --output text)
             if [[ "$STATUS" == "Successful" || "$STATUS" == "Failed" || "$STATUS" == "Cancelled" ]]; then
               echo "Instance refresh completed with status: $STATUS"
               break
