@@ -16,6 +16,7 @@ const stats = new statsd({
 
 const createSubmission = async (req, res) => {
   stats.increment(`api.submission.post.calls`)
+  const bodyLength = parseInt(req.get("Content-Length") || "0", 10);
   if (bodyLength == 0) {
     res.sendStatus(400);
   } else {
