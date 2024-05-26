@@ -43,7 +43,7 @@ variable "subnet_id" {
 source "amazon-ebs" "cloud-app-ami" {
   region          = "${var.aws_region}"
   ami_name        = "cloud-ami_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
-  ami_description = "AMI for CSYE6225 Assignment 05"
+  ami_description = "AMI for CSYE6225 Assignment 08"
 
   ami_users = [
     "856405792108",
